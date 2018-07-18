@@ -1,19 +1,44 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <div style="text-align:center">
   <h1>
-    Welcome to {{ title }}!
+    Restful Task {{ title }}!
   </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
-  <!-- <button (click)="onButtonClick()" >Click me!</button>
-  <button (click)="onButtonClickParam(5)">Click me!</button>
-  <button (click)="onButtonClickParams(5, 'hello')">Click me!</button>
-  <button (click)="onButtonClickEvent($event)">Click me!</button> -->
-</div>
-<button (click)="getAllTasks()">Get all Tasks</button>
-<h2>This is all Tasks</h2>
-<div *ngFor="let task of allTasks">
-  <p>{{ task.title }}
-    <button (click)="getOneTask(task._id)">Info for this task</button>
-  </p>
-</div>
-<p>This is one task: {{ oneTask.title }}, {{ oneTask.description }}</p>
+
+  <button (click)="getAllTasks()">Get all Tasks</button>
+  <h2>This is all Tasks</h2>
+  <p>{{newTask | json}}</p>
+  <form (submit)="createTask()">
+    <label for="">Task title:
+      <input type="text" name="newTask.title" [(ngModel)]="newTask.title">
+    </label>
+    <br>
+    <label for="">Task description:
+      <input type="text" name="newTask.description" [(ngModel)]="newTask.description">
+    </label>
+    <input type="submit" value="Create Task">
+  </form>
+  <div *ngFor="let task of allTasks">
+    <p>{{ task.title }}
+      <button (click)="getOneTask(task._id)">Info for this task</button>
+      <button (click)="deleteTask(task._id)">Delete</button>
+      <button (click)="showEditForm(task)">Edit</button>
+    </p>
+  </div>
+  <div *ngIf="oneTask">
+    <h3>{{ oneTask.title }}</h3>
+    <p>This is one task: {{ oneTask.description }}</p>
+  </div>
+  
+  
+  <div *ngIf="displayForm">
+    <form (submit)="editTask()">
+      <label for="">Task title:
+        <input type="text" name="updateTask.title" [(ngModel)]="updateTask.title">
+      </label>
+      <br>
+      <label for="">Task description:
+        <input type="text" name="updateTask.description" [(ngModel)]="updateTask.description">
+      </label>
+      <input type="submit" value="Update Task">
+    </form>
+  </div>

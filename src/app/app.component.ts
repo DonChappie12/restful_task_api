@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HttpService } from './http.service';
 
 @Component({
@@ -6,36 +6,54 @@ import { HttpService } from './http.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
-  title = 'Mean';
+export class AppComponent implements OnInit {
+  // implements OnInit
+  title = 'API';
   allTasks: any;
   oneTask: any;
+  display: boolean = false || true;
+  newTask: any;
+  updateTask: any;
+  displayForm: boolean = false;
   constructor(private _httpService: HttpService){
-    // this.getAllTasks();
-    // this.getOneTask('');
   }
+    ngOnInit(){
+      this.newTask = {title: "", description: ""}
+    }
   getAllTasks(){
-    let x = this._httpService.getTasks()
-    x.subscribe(data=>{this.allTasks = data;
+    this.display = !this.display;
+    this._httpService.getTasks().subscribe(data=>{this.allTasks = data;
     console.log(this.allTasks)})
   }
   getOneTask(id){
-    let z = this._httpService.getOneTask(id)
-    z.subscribe(data=>{
+    this._httpService.getOneTask(id).subscribe(data=>{
       this.oneTask = data;
       // console.log(this.oneTasks) chmodtriple7
     })
   }
-  // onButtonClick(): void { 
-  //   console.log(`Click event is working`);
-  // }
-  // onButtonClickParam(num: Number): void { 
-  //   console.log(`Click event is working with num param: ${num}`);
-  // }
-  // onButtonClickParams(num: Number, str: String): void { 
-  //   console.log(`Click event is working with num param: ${num} and str param: ${str}`);
-  // }
-  // onButtonClickEvent(event: any): void { 
-  //   console.log(`Click event is working with event: ${event}`);
-  // }
+  createTask(){
+    this._httpService.createTask(this.newTask).subscribe(data=>{
+      console.log(data);
+      this.newTask={title: "", description: ""};
+    })
+  }
+  deleteTask(id){
+    console.log(id)
+    this._httpService.deleteTask(id).subscribe(data=>{
+      console.log("task is delete");
+    })
+    this.getAllTasks();
+  }
+  editTask(){
+    this._httpService.editTask(this.updateTask).subscribe(data=>{
+      console.log("You did it");
+      this.updateTask = null;
+    })
+    this.displayForm = false;
+    this.getAllTasks();
+  }
+  showEditForm(task){
+    this.displayForm = true;
+    this.updateTask = Object.assign({}, task);
+  }
 }
